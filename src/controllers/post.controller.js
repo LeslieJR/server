@@ -1,7 +1,7 @@
 const models = require("../models");
 const config = require("../config");
 const values = require("../values");
-import { unlink } from 'fs/promises';
+const { unlink } = require ('fs/promises');
 const path = require("path");
 
 const upload = async (req, res) => {
@@ -89,7 +89,7 @@ const remove = async (req, res) => {
     const imageSplit = post.image.split("/");
     const fileName = imageSplit[imageSplit.length - 1];
     const imagePath = path.resolve(
-      `./src/statics/${values.imageFolder}/` + fileName
+      `./src/static/${values.imageFolder}/` + fileName
     );
     console.log(imagePath)
     await unlink(imagePath);
