@@ -23,7 +23,7 @@ const PostSchema = new Schema(
     type:Number,
     default: 0
    },
-   owner_id:{
+   owner:{
      type: Schema.Types.ObjectId,
      ref: 'User',
      required: true

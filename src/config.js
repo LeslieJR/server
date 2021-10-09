@@ -1,3 +1,5 @@
+const values = require('./values.js')
+const port = 4000
 const config = {
     imageFolder: './src/static',
     database:{
@@ -7,8 +9,16 @@ const config = {
         secret:'3245454tkgfgkffe4r32'
     },
     server:{
-        hostname: 'http://localhost:'+this.port,
-        port: 4000
+        hostname: 'http://localhost:'+port,
+        port
+    },
+    multer:{
+        [values.imageFolder](cb){
+            cb(null, './src/static/'+values.imageFolder)
+        },
+        [values.avatarFolder](cb){
+            cb(null, './src/static/'+values.avatarFolder)
+        }
     }
 }
 module.exports = config
