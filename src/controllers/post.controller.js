@@ -80,8 +80,9 @@ const stats = async (req, res) => {
     const count_comments = (await models.comment.find()).length;
     const count_posts = await models.post.countDocuments();
     let views = 0;
+    let likes = 0;
     if (count_posts > 0) {
-      const result = await models.post.aggregate([
+      const result_views = await models.post.aggregate([
         {
           $group: {
             _id: "1",
@@ -90,22 +91,26 @@ const stats = async (req, res) => {
         },
       ]);
 
-      views = result[0].views;
+      views = result_views[0].views_total;
+
+      const result_likes = await models.post.aggregate([
+        {
+          $group: {
+            _id: "1",
+            likes_total: { $sum: "$likes" },
+          },
+        },
+      ]);
+
+      likes = result_likes[0].likes_total
     }
 
-    const likes = await models.post.aggregate([
-      {
-        $group: {
-          _id: "1",
-          likes_total: { $sum: "$likes" },
-        },
-      },
-    ]);
+    
     return res.json({
       count_img,
       count_comments,
       views,
-      likes: likes[0].likes_total,
+      likes
     });
   } catch (err) {
     return res.status(400).json({ err: err.message });
