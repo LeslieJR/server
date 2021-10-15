@@ -3,7 +3,7 @@ const port = 4000
 const config = {
     imageFolder: './src/static',
     database:{
-        uri:'mongodb://localhost/social'
+        uri:`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@clustersocial.a2zwn.mongodb.net/Social-App?retryWrites=true&w=majority`
     },
     jwt:{
         secret:'3245454tkgfgkffe4r32'

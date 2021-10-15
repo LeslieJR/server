@@ -98,7 +98,7 @@ const stats = async (req, res) => {
 
 const mostPopular = async (req, res) => {
   try{
-    const populars = await models.post.find().sort({
+    const populars = await models.post.find().limit(5).sort({
       views: 'desc'
     })
     return res.json(populars)
@@ -106,7 +106,7 @@ const mostPopular = async (req, res) => {
     return res.status(400).json({err:err.message})
   }
 };
-//falta definir
+
 const details = async (req, res) => {
   try{
     const {post_id} = req.body;
