@@ -1,6 +1,7 @@
 const values = require('./values.js')
 const port = process.env.PORT ?? 4000
 const config = {
+   
     imageFolder: './src/static',
     database:{
         uri:`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@clustersocial.a2zwn.mongodb.net/Social-App?retryWrites=true&w=majority`
@@ -9,7 +10,7 @@ const config = {
         secret:'3245454tkgfgkffe4r32'
     },
     server:{
-        hostname: 'http://localhost:'+port,
+        hostname: 'https://social-app-leslie.herokuapp.com',
         port
     },
     multer:{
