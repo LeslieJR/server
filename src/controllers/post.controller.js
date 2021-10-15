@@ -90,9 +90,7 @@ const stats = async (req, res) => {
           },
         },
       ]);
-
       views = result_views[0].views_total;
-
       const result_likes = await models.post.aggregate([
         {
           $group: {
@@ -103,9 +101,7 @@ const stats = async (req, res) => {
       ]);
 
       likes = result_likes[0].likes_total
-    }
-
-    
+    }    
     return res.json({
       count_img,
       count_comments,
