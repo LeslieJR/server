@@ -1,5 +1,5 @@
 const values = require('./values.js')
-const port = 4000
+const port = process.env.PORT || 4000
 const config = {
     imageFolder: './src/static',
     database:{
