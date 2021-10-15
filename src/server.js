@@ -20,6 +20,10 @@ server.use('/api/user', routes.user)
 server.use('/api/comment', routes.comment)
 server.use('/api/post', routes.post)
 
+server.get('/', (req, res)=>{
+    return res.json('Built done')
+})
+
 //Static
 server.use(express.static(path.join(__dirname, 'static')))
 
