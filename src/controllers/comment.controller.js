@@ -21,8 +21,15 @@ const createComment = async (req,res) =>{
         return res.status(400).json({err:err.message})
     }
 }
-const latestComments = (req, res) =>{
-    res.json('GET LATEST COMMENTS')
+const latestComments = async (req, res) =>{
+    try{
+        const comments = await models.post.find().sort({
+            createdAt: 'desc'
+        })
+        return res.json(comments)
+    }catch(err){
+        return res.status(400).json({err:err.message})
+    }
 }
 module.exports={
     createComment,

@@ -62,21 +62,60 @@ const view = async (req, res) => {
     return res.json({ err: err.message });
   }
 };
-//falta definir
-const recentUploads = (req, res) => {
-  res.json("RECENT UPLOADS");
+
+const recentUploads = async(req, res) => {
+  try{
+    const uploads = await models.post.find().sort({
+      createdAt: 'desc'
+    })
+    return res.json(uploads)
+  }catch(err){
+    return res.status(400).json({err:err.message})
+  }
+};
+
+const stats = async (req, res) => {
+  try{
+    const count_img = await models.post.countDocuments();
+    const count_comments = (await models.comment.find()).length;
+    const views = await models.post.aggregate([{
+      $group: {
+        _id:'1',
+        views_total: {$sum: '$views'}
+      }
+    }])
+    const likes = await models.post.aggregate([{
+      $group: {
+        _id:'1',
+        likes_total: {$sum: '$likes'}
+      }
+    }])
+    return res.json({count_img, count_comments, views: views[0].views_total, likes: likes[0].likes_total})
+  }catch(err){
+    return res.status(400).json({err:err.message})
+  }
+};
+
+const mostPopular = async (req, res) => {
+  try{
+    const populars = await models.post.find().sort({
+      views: 'desc'
+    })
+    return res.json(populars)
+  }catch(err){
+    return res.status(400).json({err:err.message})
+  }
 };
 //falta definir
-const stats = (req, res) => {
-  res.json("GET STATS");
-};
-//falta definir
-const mostPopular = (req, res) => {
-  res.json("MOST POPULARS");
-};
-//falta definir
-const details = (req, res) => {
-  res.json("GET POST DETAILS");
+const details = async (req, res) => {
+  try{
+    const {post_id} = req.body;
+    const post = await models.post.findById(post_id);
+    const comments = await models.comment.find({post});
+    return res.json({post, comments})
+  }catch(err){
+    return res.status(400).json({err:err.message})
+  }
 };
 
 const remove = async (req, res) => {
