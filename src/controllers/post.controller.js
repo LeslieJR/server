@@ -1,7 +1,7 @@
 const models = require("../models");
 const config = require("../config");
 const values = require("../values");
-const { unlink } = require ('fs/promises');
+const { unlink } = require("fs/promises");
 const path = require("path");
 
 const upload = async (req, res) => {
@@ -63,58 +63,74 @@ const view = async (req, res) => {
   }
 };
 
-const recentUploads = async(req, res) => {
-  try{
+const recentUploads = async (req, res) => {
+  try {
     const uploads = await models.post.find().sort({
-      createdAt: 'desc'
-    })
-    return res.json(uploads)
-  }catch(err){
-    return res.status(400).json({err:err.message})
+      createdAt: "desc",
+    });
+    return res.json(uploads);
+  } catch (err) {
+    return res.status(400).json({ err: err.message });
   }
 };
 
 const stats = async (req, res) => {
-  try{
+  try {
     const count_img = await models.post.countDocuments();
     const count_comments = (await models.comment.find()).length;
-    const views = await models.post.aggregate([{
-      $group: {
-        _id:'1',
-        views_total: {$sum: '$views'}
-      }
-    }])
-    const likes = await models.post.aggregate([{
-      $group: {
-        _id:'1',
-        likes_total: {$sum: '$likes'}
-      }
-    }])
-    return res.json({count_img, count_comments, views: views[0].views_total, likes: likes[0].likes_total})
-  }catch(err){
-    return res.status(400).json({err:err.message})
+    const count_posts = await models.post.countDocuments();
+    let views = 0;
+    if (count_posts > 0) {
+      const result = await models.post.aggregate([
+        {
+          $group: {
+            _id: "1",
+            views_total: { $sum: "$views" },
+          },
+        },
+      ]);
+
+      views = result[0].views;
+    }
+
+    const likes = await models.post.aggregate([
+      {
+        $group: {
+          _id: "1",
+          likes_total: { $sum: "$likes" },
+        },
+      },
+    ]);
+    return res.json({
+      count_img,
+      count_comments,
+      views,
+      likes: likes[0].likes_total,
+    });
+  } catch (err) {
+    return res.status(400).json({ err: err.message });
   }
 };
 
 const mostPopular = async (req, res) => {
-  try{
+  try {
     const populars = await models.post.find().limit(5).sort({
-      views: 'desc'
-    })
-    return res.json(populars)
-  }catch(err){
-    return res.status(400).json({err:err.message})
+      views: "desc",
+    });
+    return res.json(populars);
+  } catch (err) {
+    return res.status(400).json({ err: err.message });
   }
 };
 
 const details = async (req, res) => {
-  try{
-    const {post_id} = req.body;
-    const post = await models.post.findById(post_id);
-    const comments = await models.comment.find({post});
-    return res.json({post, comments})
-  }catch(err){
-    return res.status(400).json({err:err.message})
+  try {
+    const { id } = req.params;
+    const post = await models.post.findById(id);
+    const comments = await models.comment.find({ post });
+    return res.json({ post, comments });
+  } catch (err) {
+    return res.status(400).json({ err: err.message });
   }
 };
 
@@ -130,7 +146,7 @@ const remove = async (req, res) => {
     const imagePath = path.resolve(
       `./src/static/${values.imageFolder}/` + fileName
     );
-    console.log(imagePath)
+    console.log(imagePath);
     await unlink(imagePath);
     //to delete all the comments related to the post
     await models.comment.deleteMany({ post });
