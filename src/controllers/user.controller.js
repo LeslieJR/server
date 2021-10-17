@@ -9,11 +9,11 @@ const signIn = async(req, res) =>{
         const { email, password } = req.body;
         const user = await models.user.findOne({email});
         if(!user){
-            return res.json('USER NOT FOUND')
+            return res.json({err: 'USER NOT FOUND'})
         }
-        const isValid = utils.bcrypt.compare(password, user.password);
+        const isValid = await utils.bcrypt.compare(password, user.password);
         if(!isValid){
-            return res.json('PASSWORD DOES NOT MATCH')
+            return res.json({err:'PASSWORD DOES NOT MATCH'})
         }
         const token = jwt.sign({user}, config.jwt.secret)
         return res.json(token)
@@ -23,9 +23,12 @@ const signIn = async(req, res) =>{
 }
 const signUp = async (req, res) =>{
     try {
-        const { email, password } = req.body;
+        const { email, password,password2 } = req.body;
         const file = req.file;
         const hostname = config.server.hostname
+        if(password !== password2){
+            return res.json({err:'PASSWORD DO NOT MATCH'})
+        }
         const hash = await utils.bcrypt.encrypt(password);   
         const user = {
            avatar: hostname +'/'+values.avatarFolder+'/'+ file.filename,
@@ -35,7 +38,7 @@ const signUp = async (req, res) =>{
         const newUser = await models.user.create(user);
         return res.status(201).json(newUser);
       } catch (err) {
-        return res.json({ err });
+        return res.json({ error: err });
       }
 }
 module.exports={
