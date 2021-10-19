@@ -16,7 +16,7 @@ const signIn = async(req, res) =>{
             return res.json({err:'PASSWORD DOES NOT MATCH'})
         }
         const token = jwt.sign({user}, config.jwt.secret)
-        return res.json(token)
+        return res.json({token})
     }catch(err){
         return res.json({error:err})
     }
