@@ -9,14 +9,14 @@ const signIn = async(req, res) =>{
         const { email, password } = req.body;
         const user = await models.user.findOne({email});
         if(!user){
-            return res.json({err: 'USER NOT FOUND'})
+            return res.json({user, err: 'USER NOT FOUND'})
         }
         const isValid = await utils.bcrypt.compare(password, user.password);
         if(!isValid){
             return res.json({err:'PASSWORD DOES NOT MATCH'})
         }
         const token = jwt.sign({user}, config.jwt.secret)
-        return res.json({token})
+        return res.json({user, token})
     }catch(err){
         return res.json({error:err})
     }
