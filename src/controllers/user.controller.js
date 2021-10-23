@@ -11,12 +11,14 @@ const signIn = async(req, res) =>{
         if(!user){
             return res.json({user, err: 'USER NOT FOUND'})
         }
+        console.log(user)
         const isValid = await utils.bcrypt.compare(password, user.password);
         if(!isValid){
             return res.json({err:'PASSWORD DOES NOT MATCH'})
         }
-        const token = jwt.sign({user}, config.jwt.secret)
-        return res.json({user, token})
+        const data = {email: user.email}
+        const token = jwt.sign(data, config.jwt.secret)
+        return res.json({token, avatar: user.avatar, email: user.email})
     }catch(err){
         return res.json({error:err})
     }
