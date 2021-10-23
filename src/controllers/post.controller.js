@@ -6,12 +6,7 @@ const path = require("path");
 
 const upload = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    /* const owner = await models.user.findById(owner_id); 
-    console.log(owner);
-    if (!owner) {
-      return res.json("OWNER DOES NOT EXIST");
-    }*/
+    const { title, description, owner } = req.body;
     const file = req.file;
     const hostname = config.server.hostname;
     const filename = hostname + "/" + values.imageFolder + "/" + file.filename;
@@ -19,10 +14,13 @@ const upload = async (req, res) => {
       image: filename,
       title,
       description,
-      
+      owner
     });
     return res.json(newPost);
   } catch (err) {
+    if (req.file) {
+      await unlink(req.file.path);
+    }
     return res.json({ err: err.message });
   }
 };
@@ -115,7 +113,7 @@ const stats = async (req, res) => {
 
 const mostPopular = async (req, res) => {
   try {
-    const populars = await models.post.find().limit(6).sort({
+    const populars = await models.post.find().sort({views: 'desc'}).limit(4).sort({
       views: "desc",
     });
     return res.json(populars);
@@ -147,7 +145,8 @@ const remove = async (req, res) => {
     const imagePath = path.resolve(
       `./src/static/${values.imageFolder}/` + fileName
     );
-    console.log(imagePath);
+    
+    
     await unlink(imagePath);
     //to delete all the comments related to the post
     await models.comment.deleteMany({ post });

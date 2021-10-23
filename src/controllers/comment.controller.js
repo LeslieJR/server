@@ -23,9 +23,10 @@ const createComment = async (req,res) =>{
 }
 const latestComments = async (req, res) =>{
     try{
-        const comments = await models.post.find().sort({
+        const comments = await models.comment.find().populate('user').populate('post').sort({
             createdAt: 'desc'
         })
+
         return res.json(comments)
     }catch(err){
         return res.status(400).json({err:err.message})
