@@ -6,12 +6,12 @@ const path = require("path");
 
 const upload = async (req, res) => {
   try {
-    const { title, description, owner_id } = req.body;
-    const owner = await models.user.findById(owner_id);
+    const { title, description } = req.body;
+    /* const owner = await models.user.findById(owner_id); 
     console.log(owner);
     if (!owner) {
       return res.json("OWNER DOES NOT EXIST");
-    }
+    }*/
     const file = req.file;
     const hostname = config.server.hostname;
     const filename = hostname + "/" + values.imageFolder + "/" + file.filename;
@@ -19,7 +19,7 @@ const upload = async (req, res) => {
       image: filename,
       title,
       description,
-      owner,
+      
     });
     return res.json(newPost);
   } catch (err) {
