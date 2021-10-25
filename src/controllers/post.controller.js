@@ -29,6 +29,7 @@ const like = async (req, res) => {
   try {
     const { post_id } = req.body;
     const post = await models.post.findById(post_id);
+    
     if (!post) {
       return res.json("THIS POST DOES NOT EXIST");
     }
@@ -126,7 +127,7 @@ const details = async (req, res) => {
   try {
     const { id } = req.params;
     const post = await models.post.findById(id);
-    const comments = await models.comment.find({ post });
+    const comments = await models.comment.find({ post }).populate('user');
     return res.json({ post, comments });
   } catch (err) {
     return res.status(400).json({ err: err.message });

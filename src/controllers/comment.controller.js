@@ -1,12 +1,13 @@
 const models = require('../models')
 const createComment = async (req,res) =>{
     try{
-        const {title, comment, user_id, post_id} = req.body;
-        const user = await models.user.findById(user_id);
+        const {title, comment, post_id, owner} = req.body;
+        const user = await models.user.findById(owner);
         if(!user){
             return res.json({err: 'USER DOES NOT EXIST'})
         }
         const post = await models.post.findById(post_id);
+        console.log(post)
         if(!post){
             return res.json({err:'POST DOES NOT EXIST'})
         }
