@@ -30,7 +30,6 @@ const isOwner = async (req, res, next) => {
   }
 
   req.body.owner = user._id;
-
   next();
 };
 module.exports = {

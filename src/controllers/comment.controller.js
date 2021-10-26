@@ -7,7 +7,7 @@ const createComment = async (req,res) =>{
             return res.json({err: 'USER DOES NOT EXIST'})
         }
         const post = await models.post.findById(post_id);
-        console.log(post)
+        
         if(!post){
             return res.json({err:'POST DOES NOT EXIST'})
         }
