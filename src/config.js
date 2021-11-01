@@ -12,9 +12,9 @@ const config = {
     },
     server:{
         port: process.env.PORT ?? 4000,
-        hostname: 'http://localhost:'+4000
+        //hostname: 'http://localhost:'+4000
         
-        //hostname: 'https://social-app-leslie.herokuapp.com',
+        hostname: 'https://social-app-leslie.herokuapp.com',
        
     },
     multer:{
