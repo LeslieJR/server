@@ -25,6 +25,6 @@ server.get('/', (req, res)=>{
 })
 
 //Static
-server.use(express.static(path.join(__dirname, 'static')))
+server.use(express.static(path.join(__dirname, 'statics')))
 
 module.exports = server;

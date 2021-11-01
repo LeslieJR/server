@@ -2,7 +2,7 @@ const values = require('./values.js')
 //const port = process.env.PORT ?? 4000
 const config = {
    
-    imageFolder: './src/static',
+    imageFolder: './src/statics',
     database:{
         uri:'mongodb://localhost/social'
         //uri:`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@clustersocial.a2zwn.mongodb.net/Social-App?retryWrites=true&w=majority`
@@ -18,10 +18,10 @@ const config = {
     },
     multer:{
         [values.imageFolder](cb){
-            cb(null, './src/static/'+values.imageFolder)
+            cb(null, './src/statics/'+values.imageFolder)
         },
         [values.avatarFolder](cb){
-            cb(null, './src/static/'+values.avatarFolder)
+            cb(null, './src/statics/'+values.avatarFolder)
         }
     }
 }

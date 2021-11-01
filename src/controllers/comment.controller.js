@@ -24,7 +24,7 @@ const createComment = async (req,res) =>{
 }
 const latestComments = async (req, res) =>{
     try{
-        const comments = await models.comment.find().populate('user').populate('post').sort({
+        const comments = await models.comment.find().populate('user').populate('post').limit(5).sort({
             createdAt: 'desc'
         })
 

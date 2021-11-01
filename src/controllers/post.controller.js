@@ -126,9 +126,15 @@ const mostPopular = async (req, res) => {
 const details = async (req, res) => {
   try {
     const { id } = req.params;
+    //el middleware validateDetails pasa el userId segun el token si no existe userId es null
+    const userId = req.body.userId;
+
     const post = await models.post.findById(id);
+
+    const isOwner = post.owner.toString() === userId?.toString() //si userId es null igualmente isOwner será false
+    
     const comments = await models.comment.find({ post }).populate('user');
-    return res.json({ post, comments });
+    return res.json({ post, comments, isOwner });
   } catch (err) {
     return res.status(400).json({ err: err.message });
   }
@@ -144,7 +150,7 @@ const remove = async (req, res) => {
     const imageSplit = post.image.split("/");
     const fileName = imageSplit[imageSplit.length - 1];
     const imagePath = path.resolve(
-      `./src/static/${values.imageFolder}/` + fileName
+      `./src/statics/${values.imageFolder}/` + fileName
     );
     
     
@@ -152,9 +158,9 @@ const remove = async (req, res) => {
     //to delete all the comments related to the post
     await models.comment.deleteMany({ post });
     //to delete the post
-    await models.post.deleteOne({ _id: post_id });
+    //await models.post.deleteOne({ _id: post_id });
     //or
-    //await models.post.findByIdAndRemove(post_id)
+    await models.post.findByIdAndRemove(post_id)
     return res.status(200).json({ msg: "post deleted" });
   } catch (err) {
     return res.status(400).json({ err: err.message });

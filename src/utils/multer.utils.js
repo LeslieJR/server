@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     }
 })
 const uploads = multer({
-    //dest: './src/static/'
+    //dest: './src/statics/'
     storage: storage,
     limits:{
         fileSize: 1000000
